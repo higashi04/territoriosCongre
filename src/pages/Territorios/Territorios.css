@@ -1,0 +1,36 @@
+#territorioBody{
+    margin: 90px 50px;
+}
+
+#territoryBtnsRow {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.btnTerritorio {
+    flex-grow: 1;
+    flex-basis: 200;
+}
+
+#territorioMap{
+    width: 100vw;
+    height: auto;
+    /* margin: 75px 290px; */
+}
+
+.territorioGeocode {
+    display: flex;
+    flex-direction: row;
+}
+
+@media (min-device-width:1280px) {
+    #territorioBody{
+        margin: 60px 30px;
+    }
+    #territorioMap{
+        width: 100vw;
+        height: auto;
+        margin: 75px 50px;
+    }
+}

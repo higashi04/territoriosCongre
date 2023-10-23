@@ -1,0 +1,9 @@
+#mapHolder{
+    width: 80vw;
+    height: 50vh;
+}
+
+#mapBio_zoom {
+    /* border: 5px solid red; */
+    width: 50vw;
+}
