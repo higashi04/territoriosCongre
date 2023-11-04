@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 import MapBio from '../../components/MapBio/MapBio';
 import Geocode from '../../components/Geocoding/Geocoding';
+import ModalSearchTerritorios from '../../components/ModalSearchTerritorios/ModalSearchTerritorios';
 
 import './Territorios.css';
 
@@ -13,6 +14,8 @@ const Territorios = () => {
     const [coordinatesC, setCoordinatesC] = useState(null);
     const [coordinatesD, setCoordinatesD] = useState(null);
     const [editable, setEditable] = useState(true);
+
+    const [territorios, setTerritorios] = useState([])
 
     const handleCoordinatesChange = (inputName, newCoordinates) => {
       // Update the respective coordinate state variable
@@ -33,6 +36,14 @@ const Territorios = () => {
           break;
       }
     };
+
+    const handleCoordinatesLoad = (coordinatesLang, coordinatesLat) =>{
+      const coordinates = {
+        lat: coordinatesLat,
+        lng: coordinatesLang,
+      }
+      setCoordinatesA(coordinates);
+    }
 
     const handleSaveChanges = async() => {
       const data = {
@@ -79,6 +90,7 @@ const Territorios = () => {
         <div className="row my-5">
           <div className="col-8">
             <h3> {`Territorio ${territorioName}`}</h3>
+            <ModalSearchTerritorios territorios={territorios} />
             </div>
           <div className="col-4">
             <button className='btn btn-success btnTerritorio mx-2 mb-2' onClick={

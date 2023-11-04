@@ -24,6 +24,48 @@
     flex-direction: row;
 }
 
+#btnSearchTerritorios{
+    width: 2.5vw;
+    height: auto;
+    margin-left: 2%;
+    margin-top: 1%;
+    background-color: rgb(220, 210, 210);
+    border-radius: 10px;
+}
+
+span > #btnSearchTerritorios {
+    /* width: 2.5vw; */
+    padding: 5px;
+}
+
+#btnSearchTerritorios:hover{
+    cursor: pointer;
+    background-color: rgba(196, 191, 191, 0.623);
+}
+
+#btnSearchTerritorios:active{
+    background-color: rgba(65, 65, 65, 0.523);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    transform: translateY(2px);
+    transform: scale(0.95);
+}
+
+.territorioRow{
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    border-radius: 15px;
+}
+
+.territorioRow:nth-of-type(even) {
+    background-color: rgb(136, 135, 135);
+}
+
+.territorioRow:hover {
+    cursor: pointer;
+    background-color: rgba(65, 65, 65, 0.52);
+}
+
 @media (min-device-width:1280px) {
     #territorioBody{
         margin: 60px 30px;
