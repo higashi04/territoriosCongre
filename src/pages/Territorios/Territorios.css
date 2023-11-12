@@ -25,18 +25,16 @@
 }
 
 #btnSearchTerritorios{
-    width: 2.5vw;
+    /* width: 2.5vw; */
     height: auto;
     margin-left: 2%;
     margin-top: 1%;
     background-color: rgb(220, 210, 210);
     border-radius: 10px;
+    font-size: 70px;
 }
 
-span > #btnSearchTerritorios {
-    /* width: 2.5vw; */
-    padding: 5px;
-}
+
 
 #btnSearchTerritorios:hover{
     cursor: pointer;

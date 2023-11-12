@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import ReactMapGl, {Marker} from 'react-map-gl';
+import { PiMapPinLineBold } from "react-icons/pi";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapBio.css'
 
@@ -42,8 +43,9 @@ const MapBio = ({markers}) => {
             latitude = {marker.lat}
             longitude = {marker.lng} 
           >
-            <div className='marker'>
-              {marker.title} hola
+            <div className='marker-mapBio'>
+              {marker.title} <br />
+              <PiMapPinLineBold/>
             </div>
           </Marker>
         ))}

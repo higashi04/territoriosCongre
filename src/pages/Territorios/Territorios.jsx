@@ -15,7 +15,7 @@ const Territorios = () => {
     const [coordinatesD, setCoordinatesD] = useState(null);
     const [editable, setEditable] = useState(true);
 
-    const [territorios, setTerritorios] = useState([])
+    // const [territorios, setTerritorios] = useState([])
 
     const handleCoordinatesChange = (inputName, newCoordinates) => {
       // Update the respective coordinate state variable
@@ -37,13 +37,6 @@ const Territorios = () => {
       }
     };
 
-    const handleCoordinatesLoad = (coordinatesLang, coordinatesLat) =>{
-      const coordinates = {
-        lat: coordinatesLat,
-        lng: coordinatesLang,
-      }
-      setCoordinatesA(coordinates);
-    }
 
     const handleSaveChanges = async() => {
       const data = {
@@ -84,13 +77,47 @@ const Territorios = () => {
       setTerritorioName("")
     }
 
+    const handleTerritorySelection = (chosenTerritory) => {
+      setCoordinatesA(
+        {
+          lat: chosenTerritory.esquinaLatitudA, 
+          lng: chosenTerritory.esquinaLongitudA,
+          title: "A"
+        }
+      );
+      setCoordinatesB({
+        lat: chosenTerritory.esquinaLatitudB,
+        lng: chosenTerritory.esquinaLongitudB,
+        title: "B"
+      });
+      setCoordinatesC({
+        lat: chosenTerritory.esquinaLatitudC,
+        lng: chosenTerritory.esquinaLongitudC,
+        title: "C"
+      })
+      setCoordinatesD({
+        lat: chosenTerritory.esquinaLatitudD,
+        lng: chosenTerritory.esquinaLongitudD,
+        title: "D"
+      });
+
+
+      setTerritorioName(chosenTerritory.nombre)
+    }
+
   return (
     <div id='territorioBody'>
 
         <div className="row my-5">
           <div className="col-8">
             <h3> {`Territorio ${territorioName}`}</h3>
-            <ModalSearchTerritorios territorios={territorios} />
+            <ModalSearchTerritorios  
+              onTerritorySelection={
+                (chosenTerritory) => {
+                  handleTerritorySelection(chosenTerritory)
+                }
+              } 
+              />
             </div>
           <div className="col-4">
             <button className='btn btn-success btnTerritorio mx-2 mb-2' onClick={

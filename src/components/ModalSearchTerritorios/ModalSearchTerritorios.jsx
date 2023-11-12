@@ -3,14 +3,22 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { TbMapSearch } from "react-icons/tb";
 
-function ModalSearchTerritorios() {
+function ModalSearchTerritorios({onTerritorySelection}) {
   const [show, setShow] = useState(false);
   const [territorios, setTerritorios] = useState([])
+
+  const [chosenTerritory, setChosenTerritory] = useState(null)
 
   const handleClose = () => setShow(false);
   const handleShow = async () => {
     await handleHttpRequest()
     setShow(true);
+  }
+
+  const handleRowClick = (row) => {
+    setChosenTerritory(row)
+
+    onTerritorySelection(row)
   }
 
   const handleHttpRequest = async(congregacionId = '65469cf0df48930f2ed9552b') =>{
@@ -40,7 +48,7 @@ function ModalSearchTerritorios() {
         <Modal.Body>
         {Array.isArray(territorios) && territorios.length > 0 ? (
             territorios.map((territorio, index) => (
-              <div key={territorio._id} className="territorioRow">{territorio.nombre}</div>
+              <div key={territorio._id} className="territorioRow" onClick={() => handleRowClick(territorio)}>{territorio.nombre}</div>
             ))
           ) : (
             <div>No hay territorios capturados para su congregacion</div>
@@ -48,10 +56,7 @@ function ModalSearchTerritorios() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
+            Cerrar
           </Button>
         </Modal.Footer>
       </Modal>
