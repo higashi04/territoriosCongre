@@ -13,6 +13,8 @@ const Territorios = () => {
     const [coordinatesB, setCoordinatesB] = useState(null);
     const [coordinatesC, setCoordinatesC] = useState(null);
     const [coordinatesD, setCoordinatesD] = useState(null);
+    const [centerLat, setCenterLat] = useState(0);
+    const [centerLng, setCenterLng] = useState(0);
     const [editable, setEditable] = useState(true);
 
     // const [territorios, setTerritorios] = useState([])
@@ -37,6 +39,27 @@ const Territorios = () => {
       }
     };
 
+    const handleCenter = () => {
+      if(coordinatesA && coordinatesB && coordinatesC && coordinatesD) {
+        const lngSum = coordinatesA.lng + coordinatesB.lng + coordinatesC.lng + coordinatesD.lng;
+        const latSum = coordinatesA.lat + coordinatesB.lat + coordinatesC.lat + coordinatesD.lat;
+        
+        const centerLng = lngSum / 4;
+        const centerLat = latSum / 4;
+
+        console.log(centerLng)
+        console.log(centerLat)
+
+        setCenterLat(centerLat)
+        setCenterLng(centerLng)
+        // return {
+        //   lng: centerLng,
+        //   lat: centerLat
+        // }
+
+      }
+    }
+
 
     const handleSaveChanges = async() => {
       const data = {
@@ -49,6 +72,7 @@ const Territorios = () => {
         esquinaLongitudB: coordinatesB.lng,
         esquinaLongitudC: coordinatesC.lng,
         esquinaLongitudD: coordinatesD.lng,
+        congregacion: "65469cf0df48930f2ed9552b"
       }
       await fetch(process.env.REACT_APP_API_SERVER + "territorios/create", {
         method: "POST",
@@ -101,7 +125,7 @@ const Territorios = () => {
         title: "D"
       });
 
-
+      handleCenter()
       setTerritorioName(chosenTerritory.nombre)
     }
 
@@ -133,6 +157,8 @@ const Territorios = () => {
         <div id="territorioMap" className='mb-3'>
           <MapBio
             markers={[coordinatesA, coordinatesB, coordinatesC, coordinatesD]}
+            lng={centerLng}
+            lat={centerLat}
           />
         </div>
         <div className="row mb-3">

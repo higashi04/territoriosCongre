@@ -7,8 +7,6 @@ function ModalSearchTerritorios({onTerritorySelection}) {
   const [show, setShow] = useState(false);
   const [territorios, setTerritorios] = useState([])
 
-  const [chosenTerritory, setChosenTerritory] = useState(null)
-
   const handleClose = () => setShow(false);
   const handleShow = async () => {
     await handleHttpRequest()
@@ -16,9 +14,8 @@ function ModalSearchTerritorios({onTerritorySelection}) {
   }
 
   const handleRowClick = (row) => {
-    setChosenTerritory(row)
-
     onTerritorySelection(row)
+    setShow(false)
   }
 
   const handleHttpRequest = async(congregacionId = '65469cf0df48930f2ed9552b') =>{
@@ -29,6 +26,7 @@ function ModalSearchTerritorios({onTerritorySelection}) {
             body: JSON.stringify({congregacionId})
         })
         const response = await request.json();
+        console.log(response)
         setTerritorios(response.territorios)
     } catch (error) {
         console.error(error)

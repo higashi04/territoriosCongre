@@ -1,30 +1,32 @@
-import React, { useState } from 'react'
-import ReactMapGl, {Marker} from 'react-map-gl';
+import React, { useEffect, useState } from 'react'
+import ReactMapGl from 'react-map-gl';
 import { PiMapPinLineBold } from "react-icons/pi";
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './MapBio.css'
 
-const MapBio = ({markers}) => {
-    // const [viewPort, setViewPort] = useState({
-    //     latitude: 27.471723410653517,
-    //     longitude: -99.49815204023983,
-    //     zoom: 13
-    // })
-    const [latitude, setLatitude] = useState(27.471723410653517);
-    const [longitude, setLongtitude] = useState(-99.49815204023983);
-    const [zoom, setZoom] = useState(13);
+import MapLines from '../MapLines/MapLines';
+
+const MapBio = ({markers, lng, lat}) => {
+    const [latitude, setLatitude] = useState(lat);
+    const [longitude, setLongtitude] = useState(lng);
+    const [zoom, setZoom] = useState(18);
+
+
+    useEffect(() => {
+      setLatitude(lat)
+      setLongtitude(lng)
+    }, [lat, lng])
 
     const handleMapMove = (viewPort) => {
       setLatitude(viewPort.latitude)
       setLongtitude(viewPort.longitude)
     }
-
-
+  
+    
   return (
     <>
     <div id='mapHolder'>
       <ReactMapGl
-        // {...viewPort}
         latitude={latitude}
         longitude={longitude}
         zoom={zoom}
@@ -36,19 +38,12 @@ const MapBio = ({markers}) => {
         interactive={true}
         onMove={evt => handleMapMove(evt.viewState)}
       >
-        {markers && markers.map((marker, index) => (
-          marker &&
-          <Marker
-            key={index}
-            latitude = {marker.lat}
-            longitude = {marker.lng} 
-          >
-            <div className='marker-mapBio'>
-              {marker.title} <br />
-              <PiMapPinLineBold/>
-            </div>
-          </Marker>
-        ))}
+        
+        <MapLines markerOne={markers[0]} markerTwo={markers[1]} />
+        <MapLines markerOne={markers[1]} markerTwo={markers[3]} />
+        <MapLines markerOne={markers[0]} markerTwo={markers[2]} />
+        <MapLines markerOne={markers[2]} markerTwo={markers[3]} />
+
       </ReactMapGl>
     </div>
     <div className="row mt-3 me-5">
@@ -56,7 +51,7 @@ const MapBio = ({markers}) => {
         <span className="form-label">Zoom {zoom}</span>
         <input type="range" 
           className='form-range' 
-          min={1} max={15} step={1}
+          min={1} max={25} step={1}
           onChange={(e) => {setZoom(parseInt(e.target.value))}}
           defaultValue={zoom}
         />
