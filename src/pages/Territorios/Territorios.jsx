@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
 import MapBio from '../../components/MapBio/MapBio';
 import Geocode from '../../components/Geocoding/Geocoding';
@@ -17,7 +19,14 @@ const Territorios = () => {
     const [centerLng, setCenterLng] = useState(0);
     const [editable, setEditable] = useState(true);
 
-    // const [territorios, setTerritorios] = useState([])
+    const {user} = useSelector((state) => state.auth);
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      if(user === null) {
+        navigate("/")
+      }
+    }, [user, navigate])
 
     const handleCoordinatesChange = (inputName, newCoordinates) => {
       // Update the respective coordinate state variable

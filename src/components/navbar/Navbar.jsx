@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { BsPinMapFill } from "react-icons/bs";
 import { Link, Outlet, useNavigate } from "react-router-dom";
@@ -10,6 +10,12 @@ const Navibar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if(user === null) {
+      navigate("/")
+    }
+  }, [user, navigate])
 
   const [scroll, setScroll] = useState(false);
   const changeNavbarColor = () => {
@@ -39,24 +45,19 @@ const Navibar = () => {
         <Container>
           <Navbar.Brand>
               {" "}
-              <BsPinMapFill />{" Aplicación de Administración de Territorios "} 
+              <BsPinMapFill />{" Aplicación de Territorios "} 
            
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="/contacto">Contacto</Nav.Link>
-              {/* <Nav.Link href="/about">Quiénes Somos</Nav.Link>
-              <Nav.Link href="/vacantes">Vacantes</Nav.Link>
-              <Nav.Link href="/servicio">Servicio</Nav.Link>
-              <Nav.Link href="/seguridad">Seguridad</Nav.Link>
-              <Nav.Link href="https://www.facebook.com/TranspoVillareal2022">
-                <BsFacebook /> TranspoVillareal2022
-              </Nav.Link>
-            <Nav.Link href="#">
-                <GrInstagram />
-              </Nav.Link>  */}
-              {/* {user && <Nav.Link href="/choferes" >Choferes</Nav.Link>} */}
+              {user && (
+                <>
+                <Nav.Link href="/Territorios">Territorios</Nav.Link>
+                <Nav.Link href="/Congregacion">Alta de Congregaciones</Nav.Link>
+                <Nav.Link href="/Register">Alta de Usuarios</Nav.Link>
+                </>
+              )}
             </Nav>
             {user ? (
               <>
@@ -67,7 +68,7 @@ const Navibar = () => {
               </>
             ) : (
               <>
-                <Link className="btn btn-success" to="login" reloadDocument>
+                <Link className="btn btn-success" to="/" reloadDocument>
                   <FaSignInAlt /> Iniciar Sesión
                 </Link>
               </>

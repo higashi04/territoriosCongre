@@ -1,0 +1,15 @@
+.congreRow{
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    border-radius: 15px;
+}
+
+.congreRow:nth-of-type(even) {
+    background-color: rgb(136, 135, 135);
+}
+
+.congreRow:hover {
+    cursor: pointer;
+    background-color: rgba(65, 65, 65, 0.52);
+}
