@@ -3,7 +3,7 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import { BsPinMapFill } from "react-icons/bs";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
+import { FaSignOutAlt, FaUser } from "react-icons/fa";
 import { logout, reset } from "../../redux/auth/authSlice";
 
 const Navibar = () => {
@@ -55,22 +55,16 @@ const Navibar = () => {
                 <>
                 <Nav.Link href="/Territorios">Territorios</Nav.Link>
                 <Nav.Link href="/Congregacion">Alta de Congregaciones</Nav.Link>
-                <Nav.Link href="/Register">Alta de Usuarios</Nav.Link>
+                <Nav.Link href="/Register"> Administrar Usuarios</Nav.Link>
                 </>
               )}
             </Nav>
-            {user ? (
+            {user && (
               <>
               <Link to='/perfil' className="btn btn-dark me-2" reloadDocument> <FaUser/> {user.username}</Link>
                 <button className="btn btn-dark" onClick={onLogout}>
                   <FaSignOutAlt /> Cerrar Sesión
                 </button>
-              </>
-            ) : (
-              <>
-                <Link className="btn btn-success" to="/" reloadDocument>
-                  <FaSignInAlt /> Iniciar Sesión
-                </Link>
               </>
             )}
           </Navbar.Collapse>

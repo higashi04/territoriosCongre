@@ -1,0 +1,8 @@
+.userFoundRow:nth-of-type(even) {
+    background-color: rgb(136, 135, 135);
+}
+
+.userFoundRow:hover{
+    cursor: pointer;
+    background-color: rgba(65, 65, 65, 0.52);
+}

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import ModalSearchCongregaciones from "../../components/ModalSearchCongregaciones/ModalSearchCongregaciones";
+import ModalUsers from "../../components/modalUsers/ModalUsers";
 
 import "./Register.css";
 
@@ -13,6 +14,7 @@ const upperCaseLetterRegex = /[A-Z]/g;
 const numbersPassword = /[0-9]/g;
 
 const Register = () => {
+  const [title, setTitle] = useState("Crear Cuenta");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,26 +25,51 @@ const Register = () => {
   const [congregacionName, setCongregacionName] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [toggle, setToggle] = useState(false);
+  const [isNewUser, setIsNewUser] = useState(true);
+  const [userId, setUserId] = useState('');
 
-  const {user} = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(user === null) {
-      navigate("/")
+    if (user === null) {
+      navigate("/");
     }
-  }, [user, navigate])
+  }, [user, navigate]);
 
   const handleCongregationSelection = (congre) => {
     setCongregacion(congre._id);
     setCongregacionName(congre.nombre);
   };
 
+  const handleUserSelect = (clickedUser) => {
+    const {
+      username: clickedUsername,
+      email: clickedEmail,
+      firstName: clickedFirstName,
+      lastName: ClickedLastName,
+      _id: clickedId
+    } = clickedUser;
+
+    const { nombre: ClickedCongregationName, _id: clickedCongregacionId } =
+      clickedUser.congregacion;
+
+    setEmail(clickedEmail);
+    setUsername(clickedUsername);
+    setFirstName(clickedFirstName);
+    setLastName(ClickedLastName);
+    setCongregacion(clickedCongregacionId);
+    setCongregacionName(ClickedCongregationName);
+    setTitle("Editar Datos de Usuario");
+    setUserId(clickedId);
+    setIsNewUser(false);
+  };
+
   const handleToggleClick = () => {
     setToggle((previousToggle) => !previousToggle);
   };
 
-  const cleanState = () =>{
+  const cleanState = () => {
     setUsername("");
     setPassword("");
     setConfirmPassword("");
@@ -52,7 +79,10 @@ const Register = () => {
     setCongregacion("");
     setCongregacionName("");
     setPasswordError("");
-  }
+    setTitle("Crear Cuenta");
+    setIsNewUser(true);
+    setUserId('')
+  };
 
   const handleSignUp = async () => {
     try {
@@ -63,6 +93,7 @@ const Register = () => {
         firstName: firstName,
         lastName: lastName,
         congregacion: congregacion,
+        id: userId
       };
       while (passwordMsg.length > 0) {
         passwordMsg.pop();
@@ -87,18 +118,25 @@ const Register = () => {
       }
       if (passwordMsg.length > 0) {
         setPasswordError(true);
-        throw new Error(
-          "password validation invalid" +  passwordMsg.join(", ")
-        );
+        throw new Error("password validation invalid" + passwordMsg.join(", "));
       }
       console.log(data);
-      await fetch(process.env.REACT_APP_API_SERVER + "usuario/registrarse", {
+      let endPoint = "usuario/registrarse"
+      if(!isNewUser) {
+        endPoint = 'usuario/update'
+      }
+      const response = await fetch(process.env.REACT_APP_API_SERVER + endPoint , {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      if (!response.ok) {
+        // Handle error, for example:
+        console.error(`HTTP error! Status: ${response.status}`);
+        throw response
+      }
     } catch (error) {
-      console.error(error);
+      console.log(error)
     } finally {
       cleanState();
     }
@@ -106,11 +144,19 @@ const Register = () => {
 
   return (
     <div className="mt-5 ms-5">
+      <div id="registerBtnFile" className="mt-5 ms-5">
+        <button className="btn btn-dark" onClick={cleanState}>
+          Limpiar Campos
+        </button>
+        <ModalUsers
+          onUserClick={(clickedUser) => handleUserSelect(clickedUser)}
+        />
+      </div>
       <div id="mainRegister">
-        <h1 className="mb-3">Crear Cuenta</h1>
+        <h1 className="mb-3">{title}</h1>
 
         <div className="row mb-3">
-          <div className="col">
+          <div className="col-8">
             <div className="form-floating">
               <input
                 className="form-control"
@@ -118,6 +164,7 @@ const Register = () => {
                 name="username"
                 id="username"
                 type="text"
+                value={username}
                 onInput={(event) => {
                   setUsername(event.target.value);
                 }}
@@ -129,13 +176,14 @@ const Register = () => {
           </div>
         </div>
         <div className="row mb-3">
-          <div className="col">
+          <div className="col-6">
             <div className="form-floating">
               <input
                 className="form-control"
                 name="password"
                 id="password"
                 placeholder="Contraseña"
+                value={password}
                 type={!toggle ? "password" : "text"}
                 onInput={(event) => {
                   setPassword(event.target.value);
@@ -146,13 +194,14 @@ const Register = () => {
               </label>
             </div>
           </div>
-          <div className="col">
+          <div className="col-6">
             <div className="form-floating">
               <input
                 className="form-control"
                 name="passwordConfirm"
                 id="passwordConfirm"
                 placeholder="Contraseña"
+                value={confirmPassword}
                 type={!toggle ? "password" : "text"}
                 onInput={(event) => {
                   setConfirmPassword(event.target.value);
@@ -165,7 +214,7 @@ const Register = () => {
           </div>
         </div>
         <div className="row mb-3">
-          <div className="col">
+          <div className="col-12">
             ¿Mostar Contraseña?{" "}
             {toggle ? (
               <FaEyeSlash
@@ -181,7 +230,7 @@ const Register = () => {
           </div>
         </div>
         <div className="row mb-3">
-          <div className="col">
+          <div className="col-6">
             <div className="form-floating">
               <input
                 className="form-control"
@@ -189,6 +238,7 @@ const Register = () => {
                 name="firstName"
                 id="firstName"
                 type="text"
+                value={firstName}
                 onInput={(event) => {
                   setFirstName(event.target.value);
                 }}
@@ -198,7 +248,7 @@ const Register = () => {
               </label>
             </div>
           </div>
-          <div className="col">
+          <div className="col-6">
             <div className="form-floating">
               <input
                 className="form-control"
@@ -206,6 +256,7 @@ const Register = () => {
                 name="lastName"
                 id="lastName"
                 type="text"
+                value={lastName}
                 onInput={(event) => {
                   setLastName(event.target.value);
                 }}
@@ -217,14 +268,15 @@ const Register = () => {
           </div>
         </div>
         <div className="row mb-3">
-          <div className="col">
+          <div className="col-6">
             <div className="form-floating">
               <input
                 className="form-control"
                 placeholder="Correo Eléctronico"
                 name="email"
                 id="email"
-                type="text"
+                type="email"
+                value={email}
                 onInput={(event) => {
                   setEmail(event.target.value);
                 }}
@@ -234,7 +286,7 @@ const Register = () => {
               </label>
             </div>
           </div>
-          <div className="col">
+          <div className="col-6">
             <div className="input-group">
               <input
                 type="text"
@@ -243,15 +295,16 @@ const Register = () => {
                 value={congregacionName}
                 disabled
               />
+
+              <button className="btn btn-primary">
+                <ModalSearchCongregaciones
+                  onCongregationSelection={(congre) =>
+                    handleCongregationSelection(congre)
+                  }
+                  btnTxt={"Congregación"}
+                />
+              </button>
             </div>
-            <button className="btn btn-primary">
-              <ModalSearchCongregaciones
-                onCongregationSelection={(congre) =>
-                  handleCongregationSelection(congre)
-                }
-                btnTxt={"Congregación"}
-              />
-            </button>
           </div>
         </div>
 

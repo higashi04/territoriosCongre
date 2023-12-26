@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { TbMapSearch } from "react-icons/tb";
@@ -6,6 +7,8 @@ import { TbMapSearch } from "react-icons/tb";
 function ModalSearchTerritorios({onTerritorySelection}) {
   const [show, setShow] = useState(false);
   const [territorios, setTerritorios] = useState([])
+
+  const {user} = useSelector((state) => state.auth);
 
   const handleClose = () => setShow(false);
   const handleShow = async () => {
@@ -18,12 +21,15 @@ function ModalSearchTerritorios({onTerritorySelection}) {
     setShow(false)
   }
 
-  const handleHttpRequest = async(congregacionId = '65469cf0df48930f2ed9552b') =>{
+  const handleHttpRequest = async() =>{
     try {
+        const data = {
+          congregacionId: user.congregacion
+        }
         const request = await fetch(process.env.REACT_APP_API_SERVER + "territorios/getbyCongregacionId", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({congregacionId})
+            body: JSON.stringify({data})
         })
         const response = await request.json();
         console.log(response)
@@ -36,16 +42,16 @@ function ModalSearchTerritorios({onTerritorySelection}) {
   return (
     <>
       <span>
-        <TbMapSearch id="btnSearchTerritorios" onClick={handleShow} />
+        <div id="btnSearchUsers" onClick={handleShow} />
       </span>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Territorios</Modal.Title>
+          <Modal.Title>Usuarios</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         {Array.isArray(territorios) && territorios.length > 0 ? (
-            territorios.map((territorio, index) => (
+            territorios.map((territorio) => (
               <div key={territorio._id} className="territorioRow" onClick={() => handleRowClick(territorio)}>{territorio.nombre}</div>
             ))
           ) : (
