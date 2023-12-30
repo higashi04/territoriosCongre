@@ -26,7 +26,22 @@ const Territorios = () => {
       if(user === null) {
         navigate("/")
       }
-    }, [user, navigate])
+    }, [user, navigate]);
+
+    useEffect(() => {
+      if(coordinatesA && coordinatesB && coordinatesC && coordinatesD) {
+        const lngSum = coordinatesA.lng + coordinatesB.lng + coordinatesC.lng + coordinatesD.lng;
+        const latSum = coordinatesA.lat + coordinatesB.lat + coordinatesC.lat + coordinatesD.lat;
+        
+        const centeredLng = lngSum / 4;
+        const centeredLat = latSum / 4;
+
+
+        setCenterLat(centeredLat)
+        setCenterLng(centeredLng)
+
+      }
+    }, [coordinatesA, coordinatesB, coordinatesC, coordinatesD])
 
     const handleCoordinatesChange = (inputName, newCoordinates) => {
       // Update the respective coordinate state variable
@@ -48,27 +63,7 @@ const Territorios = () => {
       }
     };
 
-    const handleCenter = () => {
-      if(coordinatesA && coordinatesB && coordinatesC && coordinatesD) {
-        const lngSum = coordinatesA.lng + coordinatesB.lng + coordinatesC.lng + coordinatesD.lng;
-        const latSum = coordinatesA.lat + coordinatesB.lat + coordinatesC.lat + coordinatesD.lat;
-        
-        const centerLng = lngSum / 4;
-        const centerLat = latSum / 4;
-
-        console.log(centerLng)
-        console.log(centerLat)
-
-        setCenterLat(centerLat)
-        setCenterLng(centerLng)
-        // return {
-        //   lng: centerLng,
-        //   lat: centerLat
-        // }
-
-      }
-    }
-
+    
 
     const handleSaveChanges = async() => {
       const data = {
@@ -134,7 +129,6 @@ const Territorios = () => {
         title: "D"
       });
 
-      handleCenter()
       setTerritorioName(chosenTerritory.nombre)
     }
 
@@ -176,6 +170,11 @@ const Territorios = () => {
             <input type="text" className='form-control' value={territorioName} disabled={editable} onChange={(e) => setTerritorioName(e.target.value)} />
           </div>
         </div>
+        <div className="row">
+          <div className="col-6">
+            
+          </div>
+        </div>
         <div className="row mb-5 me-5">
           <div className="col-sm-12 territorioGeocode">
             <Geocode 
@@ -209,25 +208,10 @@ const Territorios = () => {
             }}
             />
           </div>
-          {/* <div>
-        <h2>Coordinates</h2>
-        <div>
-          Input A: {coordinatesA ? `Latitude: ${coordinatesA.lat}, Longitude: ${coordinatesA.lng}` : 'No coordinates'}
-        </div>
-        <div>
-          Input B: {coordinatesB ? `Latitude: ${coordinatesB.lat}, Longitude: ${coordinatesB.lng}` : 'No coordinates'}
-        </div>
-        <div>
-          Input C: {coordinatesC ? `Latitude: ${coordinatesC.lat}, Longitude: ${coordinatesC.lng}` : 'No coordinates'}
-        </div>
-        <div>
-          Input D: {coordinatesD ? `Latitude: ${coordinatesD.lat}, Longitude: ${coordinatesD.lng}` : 'No coordinates'}
-        </div>
-        <div>
-        width: {window.innerWidth}, height: {window.innerHeight}
-        </div>
-      </div> */}
 
+        </div>
+        <div>
+          <h3>Asignación de casas marcadas</h3>
         </div>
     </div>
   )

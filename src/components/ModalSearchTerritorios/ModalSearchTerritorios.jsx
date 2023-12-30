@@ -32,7 +32,6 @@ function ModalSearchTerritorios({onTerritorySelection}) {
             body: JSON.stringify({data})
         })
         const response = await request.json();
-        console.log(response)
         setTerritorios(response.territorios)
     } catch (error) {
         console.error(error)
@@ -42,7 +41,7 @@ function ModalSearchTerritorios({onTerritorySelection}) {
   return (
     <>
       <span>
-        <div id="btnSearchUsers" onClick={handleShow} />
+        <TbMapSearch id="btnSearchTerritorios" onClick={handleShow} />
       </span>
 
       <Modal show={show} onHide={handleClose}>

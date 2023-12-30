@@ -11,3 +11,9 @@
 .marker-mapBio{
     font-size: 1.3rem;
 }
+
+.marker-doNotKnock{
+    height: 3vh;
+    width: auto;
+    color: red;
+}
