@@ -5,19 +5,22 @@ import { useNavigate } from 'react-router-dom';
 import MapBio from '../../components/MapBio/MapBio';
 import Geocode from '../../components/Geocoding/Geocoding';
 import ModalSearchTerritorios from '../../components/ModalSearchTerritorios/ModalSearchTerritorios';
+import ModalAddBrandedHouses from '../../components/ModalAddBrandedHouses/ModalAddBrandedHouses';
 
 import './Territorios.css';
 
 const Territorios = () => {
 
     const [territorioName, setTerritorioName] = useState("nombre de territorio");
-    const [coordinatesA, setCoordinatesA] = useState(null);
-    const [coordinatesB, setCoordinatesB] = useState(null);
-    const [coordinatesC, setCoordinatesC] = useState(null);
-    const [coordinatesD, setCoordinatesD] = useState(null);
+    const [coordinatesA, setCoordinatesA] = useState({lng: 0, lat: 0});
+    const [coordinatesB, setCoordinatesB] = useState({lng: 0, lat: 0});
+    const [coordinatesC, setCoordinatesC] = useState({lng: 0, lat: 0});
+    const [coordinatesD, setCoordinatesD] = useState({lng: 0, lat: 0});
     const [centerLat, setCenterLat] = useState(0);
     const [centerLng, setCenterLng] = useState(0);
     const [editable, setEditable] = useState(true);
+    const [territoryId, setTerritoryId] = useState("");
+    const [brandedHouses, setBrandedHouses] = useState([]);
 
     const {user} = useSelector((state) => state.auth);
     const navigate = useNavigate();
@@ -29,7 +32,8 @@ const Territorios = () => {
     }, [user, navigate]);
 
     useEffect(() => {
-      if(coordinatesA && coordinatesB && coordinatesC && coordinatesD) {
+      try {
+      if(coordinatesA.lng !== 0 && coordinatesB.lng !== 0 && coordinatesC.lng !== 0 && coordinatesD.lng !== 0) {
         const lngSum = coordinatesA.lng + coordinatesB.lng + coordinatesC.lng + coordinatesD.lng;
         const latSum = coordinatesA.lat + coordinatesB.lat + coordinatesC.lat + coordinatesD.lat;
         
@@ -39,27 +43,34 @@ const Territorios = () => {
 
         setCenterLat(centeredLat)
         setCenterLng(centeredLng)
-
+      }
+      } catch (error) {
+        console.error(error)
       }
     }, [coordinatesA, coordinatesB, coordinatesC, coordinatesD])
 
+
     const handleCoordinatesChange = (inputName, newCoordinates) => {
       // Update the respective coordinate state variable
-      switch (inputName) {
-        case 'A':
-          setCoordinatesA(newCoordinates);
-          break;
-        case 'B':
-          setCoordinatesB(newCoordinates);
-          break;
-        case 'C':
-          setCoordinatesC(newCoordinates);
-          break;
-        case 'D':
-          setCoordinatesD(newCoordinates);
-          break;
-        default:
-          break;
+      try {
+        switch (inputName) {
+          case 'A':
+            setCoordinatesA(newCoordinates);
+            break;
+          case 'B':
+            setCoordinatesB(newCoordinates);
+            break;
+          case 'C':
+            setCoordinatesC(newCoordinates);
+            break;
+          case 'D':
+            setCoordinatesD(newCoordinates);
+            break;
+          default:
+            break;
+        }
+      } catch (error) {
+        console.error(error)
       }
     };
 
@@ -97,15 +108,22 @@ const Territorios = () => {
     }
 
     const handleCleanForm = () => {
-      setEditable(true)
-      setCoordinatesA(null)
-      setCoordinatesB(null)
-      setCoordinatesC(null)
-      setCoordinatesD(null)
-      setTerritorioName("")
+      setEditable(true);
+      setCoordinatesA({lng: 0, lat: 0});
+      setCoordinatesB({lng: 0, lat: 0});
+      setCoordinatesC({lng: 0, lat: 0});
+      setCoordinatesD({lng: 0, lat: 0});
+      setTerritorioName("");
+      setTerritoryId("");
+      setBrandedHouses([]);
+      setCenterLat(0)
+      setCenterLng(0)
     }
 
     const handleTerritorySelection = (chosenTerritory) => {
+      // console.log(chosenTerritory)
+      try{
+        
       setCoordinatesA(
         {
           lat: chosenTerritory.esquinaLatitudA, 
@@ -129,7 +147,12 @@ const Territorios = () => {
         title: "D"
       });
 
-      setTerritorioName(chosenTerritory.nombre)
+      setTerritorioName(chosenTerritory.nombre);
+      setTerritoryId(chosenTerritory._id);
+      setBrandedHouses(chosenTerritory.marcados);
+      } catch(error) {
+        console.error(error)
+      }
     }
 
   return (
@@ -145,6 +168,7 @@ const Territorios = () => {
                 }
               } 
               />
+              {territoryId !== "" && <ModalAddBrandedHouses parentTerritory={territoryId} onBrandedSave={(territory) => handleTerritorySelection(territory)} />}
             </div>
           <div className="col-4">
             <button className='btn btn-success btnTerritorio mx-2 mb-2' onClick={
@@ -162,6 +186,9 @@ const Territorios = () => {
             markers={[coordinatesA, coordinatesB, coordinatesC, coordinatesD]}
             lng={centerLng}
             lat={centerLat}
+            brandedHouses={brandedHouses}
+            parentTerritory={territoryId}
+            onBrandedEdit={(territory) => handleTerritorySelection(territory)}
           />
         </div>
         <div className="row mb-3">
@@ -209,9 +236,6 @@ const Territorios = () => {
             />
           </div>
 
-        </div>
-        <div>
-          <h3>Asignación de casas marcadas</h3>
         </div>
     </div>
   )
