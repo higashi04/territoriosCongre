@@ -118,6 +118,7 @@ const Register = () => {
       }
       if (passwordMsg.length > 0) {
         setPasswordError(true);
+        console.log(passwordError)
         throw new Error("password validation invalid" + passwordMsg.join(", "));
       }
       console.log(data);
