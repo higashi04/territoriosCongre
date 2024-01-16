@@ -2,6 +2,7 @@
   "name": "territorios",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://fascinating-pony-eeba77.netlify.app/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.17.0",
