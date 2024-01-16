@@ -46,7 +46,7 @@ function ModalSearchTerritorios({onTerritorySelection}) {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Usuarios</Modal.Title>
+          <Modal.Title>Territorios</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         {Array.isArray(territorios) && territorios.length > 0 ? (

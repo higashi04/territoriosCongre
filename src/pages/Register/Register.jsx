@@ -26,7 +26,7 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [isNewUser, setIsNewUser] = useState(true);
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState("");
 
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ const Register = () => {
       email: clickedEmail,
       firstName: clickedFirstName,
       lastName: ClickedLastName,
-      _id: clickedId
+      _id: clickedId,
     } = clickedUser;
 
     const { nombre: ClickedCongregationName, _id: clickedCongregacionId } =
@@ -81,7 +81,7 @@ const Register = () => {
     setPasswordError("");
     setTitle("Crear Cuenta");
     setIsNewUser(true);
-    setUserId('')
+    setUserId("");
   };
 
   const handleSignUp = async () => {
@@ -93,7 +93,7 @@ const Register = () => {
         firstName: firstName,
         lastName: lastName,
         congregacion: congregacion,
-        id: userId
+        id: userId,
       };
       while (passwordMsg.length > 0) {
         passwordMsg.pop();
@@ -121,22 +121,25 @@ const Register = () => {
         throw new Error("password validation invalid" + passwordMsg.join(", "));
       }
       console.log(data);
-      let endPoint = "usuario/registrarse"
-      if(!isNewUser) {
-        endPoint = 'usuario/update'
+      let endPoint = "usuario/registrarse";
+      if (!isNewUser) {
+        endPoint = "usuario/update";
       }
-      const response = await fetch(process.env.REACT_APP_API_SERVER + endPoint , {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        process.env.REACT_APP_API_SERVER + endPoint,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
       if (!response.ok) {
         // Handle error, for example:
         console.error(`HTTP error! Status: ${response.status}`);
-        throw response
+        throw response;
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
       cleanState();
     }
@@ -145,12 +148,14 @@ const Register = () => {
   return (
     <div className="mt-5 ms-5">
       <div id="registerBtnFile" className="mt-5 ms-5">
-        <button className="btn btn-dark" onClick={cleanState}>
-          Limpiar Campos
-        </button>
-        <ModalUsers
-          onUserClick={(clickedUser) => handleUserSelect(clickedUser)}
-        />
+        <div className="row my-3">
+          <button className="btn btn-dark" onClick={cleanState}>
+            Limpiar Campos
+          </button>
+          <ModalUsers
+            onUserClick={(clickedUser) => handleUserSelect(clickedUser)}
+          />
+        </div>
       </div>
       <div id="mainRegister">
         <h1 className="mb-3">{title}</h1>

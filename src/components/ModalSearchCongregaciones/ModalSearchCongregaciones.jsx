@@ -40,7 +40,7 @@ const ModalSearchCongregaciones = ({onCongregationSelection, btnTxt}) => {
 
         <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Territorios</Modal.Title>
+          <Modal.Title>Congregación</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         {Array.isArray(congregations) && congregations.length > 0 ? (

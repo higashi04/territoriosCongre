@@ -56,7 +56,7 @@ function ModalUsers({ onUserClick }) {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Territorios</Modal.Title>
+          <Modal.Title>Usuarios</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {Array.isArray(users) && users.length > 0 ? (
