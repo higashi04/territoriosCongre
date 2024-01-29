@@ -87,7 +87,7 @@ const Territorios = () => {
         esquinaLongitudB: coordinatesB.lng,
         esquinaLongitudC: coordinatesC.lng,
         esquinaLongitudD: coordinatesD.lng,
-        congregacion: "65469cf0df48930f2ed9552b"
+        congregacion: user.congregacion
       }
       await fetch(process.env.REACT_APP_API_SERVER + "territorios/create", {
         method: "POST",
