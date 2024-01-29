@@ -7,6 +7,10 @@ import "./MapBio.css";
 import MapLines from "../MapLines/MapLines";
 import MarkerBrandedHouses from "../MarkerBrandedHouses/MarkerBrandedHouses";
 
+import mapboxgl from 'mapbox-gl';
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
+
 const MapBio = ({ markers, lng, lat, brandedHouses, parentTerritory, onBrandedEdit }) => {
   const [zoom, setZoom] = useState(18);
 
