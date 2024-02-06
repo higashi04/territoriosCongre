@@ -10,6 +10,7 @@ import LoggedIn from "./pages/LoggedInWelcome/LoggedIn";
 import Register from "./pages/Register/Register";
 import Territorios from "./pages/Territorios/Territorios";
 import Congregacion from "./pages/Congregacion/Congregacion";
+import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/Register" element={<Register/>} />
           <Route path="/Territorios" element={<Territorios/>}/>
           <Route path="/Congregacion" element={<Congregacion/>}/>
+          <Route path="*" element={<NotFound/>} />
         </Routes>
       </div>
       </BrowserRouter>
