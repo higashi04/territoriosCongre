@@ -39,7 +39,7 @@ const Navibar = () => {
         expand="lg"
         fixed="top"
         className={
-          scroll ? "navib navbar-light bg-light" : "navib navbar-light"
+          scroll ? "navib navbar-light bg-light mb3" : "navib navbar-light bg-light mb-3"
         }
       >
         <Container>
@@ -53,11 +53,15 @@ const Navibar = () => {
             <Nav className="me-auto">
               {user && (
                 <>
-                <Nav.Link href="/Territorios">Territorios</Nav.Link>
-                <Nav.Link href="/Congregacion">Alta de Congregaciones</Nav.Link>
-                <Nav.Link href="/Register"> Administrar Usuarios</Nav.Link>
+                <Link className="btn btn-outline-dark" to="/Territorios">Territorios</Link>
                 </>
               )}
+               {user.isAdmin && ( ///refactor this user validation
+                <>
+                <Link className="btn btn-outline-dark" to="/Congregacion">Alta de Congregaciones</Link>
+                <Link className="btn btn-outline-dark" to="/Register"> Administrar Usuarios</Link>
+                </>
+              )} 
             </Nav>
             {user && (
               <>

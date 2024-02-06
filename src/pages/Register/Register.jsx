@@ -5,6 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 import ModalSearchCongregaciones from "../../components/ModalSearchCongregaciones/ModalSearchCongregaciones";
 import ModalUsers from "../../components/modalUsers/ModalUsers";
+import ModalProfileType from "../../components/ModalProfileType/ModalProfileType";
 
 import "./Register.css";
 
@@ -27,12 +28,14 @@ const Register = () => {
   const [toggle, setToggle] = useState(false);
   const [isNewUser, setIsNewUser] = useState(true);
   const [userId, setUserId] = useState("");
+  const [profileType, setProfileType] = useState("");
+  const [profileTypeText, setProfileTypeText] = useState("");
 
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user === null) {
+    if (user === null && !user.isAdmin) {
       navigate("/");
     }
   }, [user, navigate]);
@@ -41,6 +44,11 @@ const Register = () => {
     setCongregacion(congre._id);
     setCongregacionName(congre.nombre);
   };
+
+  const handleProfileSelection = (profile) => {
+    setProfileType(profile._id);
+    setProfileTypeText(profile.tipo)
+  }
 
   const handleUserSelect = (clickedUser) => {
     const {
@@ -53,6 +61,12 @@ const Register = () => {
 
     const { nombre: ClickedCongregationName, _id: clickedCongregacionId } =
       clickedUser.congregacion;
+      if(clickedUser.tipo) {
+        const {tipo: clickedProfile, _id: clickedProfileId} = clickedUser.tipo
+        setProfileType(clickedProfileId);
+        setProfileTypeText(clickedProfile);
+      }
+   
 
     setEmail(clickedEmail);
     setUsername(clickedUsername);
@@ -82,6 +96,8 @@ const Register = () => {
     setTitle("Crear Cuenta");
     setIsNewUser(true);
     setUserId("");
+    setProfileType("");
+    setProfileTypeText("");
   };
 
   const handleSignUp = async () => {
@@ -94,6 +110,7 @@ const Register = () => {
         lastName: lastName,
         congregacion: congregacion,
         id: userId,
+        tipo: profileType,
       };
       while (passwordMsg.length > 0) {
         passwordMsg.pop();
@@ -311,6 +328,20 @@ const Register = () => {
                 />
               </button>
             </div>
+          </div>
+        </div>
+        <div className="row mb-3">
+          <div className="input-group">              
+            <input
+                type="text"
+                className="form-control"
+                placeholder="Tipo de Usuario"
+                value={profileTypeText}
+                disabled
+              />
+            <button className="btn btn-primary">
+              <ModalProfileType onProfileSelection={(profile) => handleProfileSelection(profile)} />
+            </button>
           </div>
         </div>
 
