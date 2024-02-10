@@ -35,7 +35,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user === null && !user.isAdmin) {
+    if (user === null && !user?.isAdmin) {
       navigate("/");
     }
   }, [user, navigate]);

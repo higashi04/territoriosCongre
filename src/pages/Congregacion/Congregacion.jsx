@@ -14,8 +14,8 @@ const Congregacion = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(user === null) {
-      navigate("/")
+    if (user === null && !user?.isAdmin) {
+      navigate("/");
     }
   }, [user, navigate])
 
