@@ -56,7 +56,7 @@ const Navibar = () => {
                 <Link className="btn btn-outline-dark" to="/Territorios">Territorios</Link>
                 </>
               )}
-               {user.isAdmin && ( ///refactor this user validation
+               {user?.isAdmin && ( 
                 <>
                 <Link className="btn btn-outline-dark" to="/Congregacion">Alta de Congregaciones</Link>
                 <Link className="btn btn-outline-dark" to="/Register"> Administrar Usuarios</Link>
