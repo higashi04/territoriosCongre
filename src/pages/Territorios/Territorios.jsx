@@ -178,7 +178,7 @@ const Territorios = () => {
           )}
         </div>
         <div className="col-4">
-          {user.isAdmin || user.canWrite ? (
+          {user?.isAdmin || user?.canWrite ? (
             <>
               <button
                 className="btn btn-success btnTerritorio mx-2 mb-2"
@@ -248,7 +248,7 @@ const Territorios = () => {
       <div className="row">
         <div className="col-6"></div>
       </div>
-      {user.canWrite && editable && (
+      {(user?.canWrite || user?.isAdmin) && !editable && (
         <>
           <div className="row mb-5 me-5">
             <div className="col-sm-12 territorioGeocode">
