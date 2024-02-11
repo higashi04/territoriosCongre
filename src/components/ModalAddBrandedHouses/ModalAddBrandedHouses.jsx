@@ -17,8 +17,8 @@ const ModalAddBrandedHouses = ({parentTerritory, onBrandedSave}) => {
 
     const handleCoordinateInput = (text) => {
         const parts = text.split(',')
-        const lat = parts[0];
-        const lng = parts[1];
+        const lat = parts[1];
+        const lng = parts[0];
 
         setLatitude(lat);
         setLongitude(lng);
