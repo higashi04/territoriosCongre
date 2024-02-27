@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import MapBio from "../../components/MapBio/MapBio";
-import Geocode from "../../components/Geocoding/Geocoding";
+// import Geocode from "../../components/Geocoding/Geocoding";
 import ModalSearchTerritorios from "../../components/ModalSearchTerritorios/ModalSearchTerritorios";
 import ModalAddBrandedHouses from "../../components/ModalAddBrandedHouses/ModalAddBrandedHouses";
 
@@ -61,7 +61,7 @@ const Territorios = () => {
   }, [coordinatesA, coordinatesB, coordinatesC, coordinatesD]);
 
   const handleCoordinatesChange = (inputName, newCoordinates) => {
-    // Update the respective coordinate state variable
+    console.log(inputName)
     try {
       switch (inputName) {
         case "A":
@@ -124,12 +124,12 @@ const Territorios = () => {
     setTerritorioName("");
     setTerritoryId("");
     setBrandedHouses([]);
-    setCenterLat(0);
-    setCenterLng(0);
+    // setCenterLat(0);
+    // setCenterLng(0);
   };
 
   const handleTerritorySelection = (chosenTerritory) => {
-    // console.log(chosenTerritory)
+   console.log(chosenTerritory)
     try {
       setCoordinatesA({
         lat: chosenTerritory.esquinaLatitudA,
@@ -231,6 +231,9 @@ const Territorios = () => {
           brandedHouses={brandedHouses}
           parentTerritory={territoryId}
           onBrandedEdit={(territory) => handleTerritorySelection(territory)}
+          territoryId={territoryId}
+          onBrandedSave={(territory) => handleTerritorySelection(territory)}
+          onCornerSelection={(corner, coordinates) => handleCoordinatesChange(corner, coordinates)}
         />
       </div>
       <div className="row mb-3">
@@ -248,7 +251,7 @@ const Territorios = () => {
       <div className="row">
         <div className="col-6"></div>
       </div>
-      {(user?.canWrite || user?.isAdmin) && !editable && (
+      {/* {(user?.canWrite || user?.isAdmin) && !editable && (
         <>
           <div className="row mb-5 me-5">
             <div className="col-sm-12 territorioGeocode">
@@ -285,7 +288,7 @@ const Territorios = () => {
             </div>
           </div>
         </>
-      )}
+      )} */}
     </div>
   );
 };

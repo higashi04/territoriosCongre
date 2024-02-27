@@ -11,6 +11,8 @@ const MarkerBrandedHouses = ({
   parentTerritory,
   onBrandedEdit,
   id,
+  onMarkerClick,
+  branded
 }) => {
   return (
     <Marker latitude={parseFloat(lat)} longitude={parseFloat(lng)}>
@@ -19,6 +21,9 @@ const MarkerBrandedHouses = ({
         parentTerritory={parentTerritory}
         onBrandedEdit={onBrandedEdit}
         id={id}
+        address={branded.address}
+        comments={branded.comments}
+        ClickedMarker={event => onMarkerClick(event)}
       />
     </Marker>
   );

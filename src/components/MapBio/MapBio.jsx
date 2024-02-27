@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactMapGl from "react-map-gl";
 
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -6,28 +6,65 @@ import "./MapBio.css";
 
 import MapLines from "../MapLines/MapLines";
 import MarkerBrandedHouses from "../MarkerBrandedHouses/MarkerBrandedHouses";
+import ModalMapOptions from "../ModalMapOptions/ModalMapOptions";
 
 import mapboxgl from 'mapbox-gl';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
-const MapBio = ({ markers, lng, lat, brandedHouses, parentTerritory, onBrandedEdit }) => {
+const MapBio = ({ markers, lng, lat, brandedHouses, parentTerritory, onBrandedEdit, territoryId, onBrandedSave, onCornerSelection }) => {
   const [zoom, setZoom] = useState(18);
+  const [coordinates, setCoordinates] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [map, setMap] = useState(null);
+  const [showMarkerClick, setShowMarkerClick] = useState(false);
+  const [lngValue, setLngValue] = useState(lng);
+  const [latValue, setLatValue] = useState(lat);
+
+  useEffect(() => {
+    setLatValue(lat);
+    setLngValue(lng);
+  }, [lng, lat])
+
+  useEffect( () => {
+    console.log(lngValue)
+    console.log(latValue)
+    if(map) {
+      map.flyTo({center: [lngValue, latValue]})
+    }
+  }, [map, lngValue, latValue])
+
+  const handleMapClick = (event) => {
+    if(!showMarkerClick){
+      
+    const { lngLat } = event;
+    setCoordinates(lngLat);
+    setShowModal(true);
+    }
+  };
+
+  
+
+  const handleMarkerClick = (bool) => setShowMarkerClick(bool);
 
   return (
     <>
       <div id="mapHolder">
         <ReactMapGl
-          latitude={lat}
-          longitude={lng}
+          // center={[lng, lat]}
+          // latitude={lat}
+          // longitude={lng}
+          ref={el => setMap(el)}
           zoom={zoom}
           mapboxAccessToken={process.env.REACT_APP_MAPBOX_KEY}
           width="100%"
           height="100%"
-          transitionDuration="200"
+          transitionDuration="500"
           mapStyle={process.env.REACT_APP_MAP_STYLE}
-          // interactive={true}
-          // onMove={evt => handleMapMove(evt.viewState)}
+          onClick={handleMapClick}
+          interactive={true}
+          dragPan = {true}
+          dragRotate = {true}
         >
           <MapLines markerOne={markers[0]} markerTwo={markers[1]} />
           <MapLines markerOne={markers[1]} markerTwo={markers[3]} />
@@ -38,11 +75,13 @@ const MapBio = ({ markers, lng, lat, brandedHouses, parentTerritory, onBrandedEd
             brandedHouses.map((branded) => (
               <MarkerBrandedHouses
                 key={branded._id}
-                lng={branded.lat}
-                lat={branded.lng}
+                lng={branded.lng}
+                lat={branded.lat}
                 parentTerritory={parentTerritory}
                 onBrandedEdit={onBrandedEdit}
                 id={branded._id}
+                branded={branded}
+                onMarkerClick={event => handleMarkerClick(event)}
               />
             ))}
         </ReactMapGl>
@@ -63,6 +102,17 @@ const MapBio = ({ markers, lng, lat, brandedHouses, parentTerritory, onBrandedEd
           />
         </div>
       </div>
+
+      {showModal && (
+        <ModalMapOptions 
+        coordinates={coordinates}
+        showModal={showModal}
+        territoryId= {territoryId}
+        onModalClose={e => setShowModal(e)} 
+        onBrandedSave={onBrandedSave}
+        onCornerSelection={(corner, coordinates) => onCornerSelection(corner, coordinates)}
+        />
+      )}
     </>
   );
 };

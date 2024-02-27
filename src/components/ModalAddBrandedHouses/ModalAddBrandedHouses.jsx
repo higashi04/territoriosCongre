@@ -52,12 +52,12 @@ const ModalAddBrandedHouses = ({parentTerritory, onBrandedSave}) => {
     return (
         <>
         <span className="btn btn-secondary mx-3" onClick={handleShow}>
-            Agregar Casas Marcadas <TbMapPinOff/>
+            Agregar Casas donde no hay que tocar <TbMapPinOff/>
         </span>
 
         <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Agregar Casas Marcadas</Modal.Title>
+          <Modal.Title>Agregar Casas donde no hay que tocar</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <div className="row my-5">
