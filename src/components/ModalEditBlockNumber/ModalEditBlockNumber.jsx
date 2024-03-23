@@ -118,6 +118,7 @@ const ModalEditBlockNumber = ({
                 type="checkbox"
                 role="switch"
                 id="checkWorked"
+                defaultChecked={worked}
                 onChange={handleSwitch}
               />
               <label className="form-check-label" htmlFor="checkWorked">
