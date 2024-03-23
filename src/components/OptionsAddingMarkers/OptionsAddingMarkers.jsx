@@ -1,21 +1,11 @@
 import React, { useState } from "react";
 
-const OptionsAddingMarkers = ({lat, lng, parentTerritory, onBrandedSave}) => {
-//   const [latitude, setLatitude] = useState(0);
-//   const [longtitude, setLongitude] = useState(0);
+const OptionsAddingMarkers = ({lat, lng, parentTerritory, onBrandedSave, onBlockSave}) => {
   const [option, setOption] = useState(0);
   const [address, setAddress] = useState("");
   const [comments, setComments] = useState("");
+  const [blockNumber, setBlockNumber] = useState("");
 
-  const handleCoordinateInput = () => {
-    // console.log(coordinates)
-    // const parts = coordinates.split(",");
-    // const lat = parts[1];
-    // const lng = parts[0];
-
-    // setLatitude(coordinates.lat);
-    // setLongitude(coordinates.lng);
-  };
 
   const handleBrandedCreation = async () => {
     try {
@@ -26,7 +16,6 @@ const OptionsAddingMarkers = ({lat, lng, parentTerritory, onBrandedSave}) => {
         address,
         territory: parentTerritory,
       };
-      console.log(data);
       const request = await fetch(
         process.env.REACT_APP_API_SERVER + "territorios/createMarked",
         {
@@ -48,15 +37,43 @@ const OptionsAddingMarkers = ({lat, lng, parentTerritory, onBrandedSave}) => {
     }
   };
 
+  const handleBlockNumberRegister = async() => {
+    try {
+      const data = {
+        lat,
+        lng,
+        name: blockNumber,
+        territory: parentTerritory,
+      }
+      const request = await fetch(
+        process.env.REACT_APP_API_SERVER + "territorios/addBlock",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
+      if (request.ok) {
+        const response = await request.json();
+       onBlockSave(response);
+      } else {
+        throw request;
+      }
+    } catch (error) {
+      const err = await error.json();
+      console.error(err);
+    }
+  }
+
   const makeHttpCall = async() => {
-    handleCoordinateInput();
     setTimeout(async() => {
-        
     switch (option) {
         case 1:
             await handleBrandedCreation();
             break;
-    
+        case 2:
+            await handleBlockNumberRegister();
+          break;
         default:
             break;
     }
@@ -117,7 +134,14 @@ const OptionsAddingMarkers = ({lat, lng, parentTerritory, onBrandedSave}) => {
           </div>
         </>
       ) : option === 2 ? (
-        "este todavía no queda listo"
+        <>
+        <div className="row">
+          <div className="input-group">
+            <label htmlFor="blockNumberInput" className="input-group-text">Número de Manzana</label>
+            <input type="text" className="form-control" value={blockNumber} onInput={(event) => setBlockNumber(event.target.value)} />
+          </div>
+        </div>
+        </>
       ) : (
         ""
       )}

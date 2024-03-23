@@ -11,7 +11,8 @@ const ModalMapOptions = ({
   onModalClose,
   territoryId,
   onBrandedSave,
-  onCornerSelection
+  onCornerSelection,
+  onBlockSave
 }) => {
   const [show, setShow] = useState(showModal);
 
@@ -45,7 +46,8 @@ const ModalMapOptions = ({
           lat={coordinates?.lat} 
           lng ={coordinates?.lng} 
           parentTerritory={territoryId} 
-          onBrandedSave={onBrandedSave} />
+          onBrandedSave={onBrandedSave} 
+          onBlockSave={onBlockSave}/>
         ) : (
          <OptionsNewTerritory coordinates={coordinates} onCornerSelection={(corner, coordinates) => onCornerSelection(corner, coordinates)} />
         )}

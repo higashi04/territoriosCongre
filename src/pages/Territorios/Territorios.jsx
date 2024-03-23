@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import MapBio from "../../components/MapBio/MapBio";
 // import Geocode from "../../components/Geocoding/Geocoding";
 import ModalSearchTerritorios from "../../components/ModalSearchTerritorios/ModalSearchTerritorios";
-import ModalAddBrandedHouses from "../../components/ModalAddBrandedHouses/ModalAddBrandedHouses";
+//import ModalAddBrandedHouses from "../../components/ModalAddBrandedHouses/ModalAddBrandedHouses";
 
 import "./Territorios.css";
 
@@ -20,6 +20,7 @@ const Territorios = () => {
   const [editable, setEditable] = useState(true);
   const [territoryId, setTerritoryId] = useState("");
   const [brandedHouses, setBrandedHouses] = useState([]);
+  const [blockNumbers, setBlockNumbers] = useState([]);
 
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
@@ -61,7 +62,6 @@ const Territorios = () => {
   }, [coordinatesA, coordinatesB, coordinatesC, coordinatesD]);
 
   const handleCoordinatesChange = (inputName, newCoordinates) => {
-    console.log(inputName)
     try {
       switch (inputName) {
         case "A":
@@ -124,8 +124,7 @@ const Territorios = () => {
     setTerritorioName("");
     setTerritoryId("");
     setBrandedHouses([]);
-    // setCenterLat(0);
-    // setCenterLng(0);
+    setBlockNumbers([]);
   };
 
   const handleTerritorySelection = (chosenTerritory) => {
@@ -155,6 +154,7 @@ const Territorios = () => {
       setTerritorioName(chosenTerritory.nombre);
       setTerritoryId(chosenTerritory._id);
       setBrandedHouses(chosenTerritory.marcados);
+      setBlockNumbers(chosenTerritory.blocks);
     } catch (error) {
       console.error(error);
     }
@@ -170,12 +170,7 @@ const Territorios = () => {
               handleTerritorySelection(chosenTerritory);
             }}
           />
-          {(territoryId !== "" && user.canWrite)&& (
-            <ModalAddBrandedHouses
-              parentTerritory={territoryId}
-              onBrandedSave={(territory) => handleTerritorySelection(territory)}
-            />
-          )}
+          
         </div>
         <div className="col-4">
           {user?.isAdmin || user?.canWrite ? (
@@ -229,10 +224,12 @@ const Territorios = () => {
           lng={centerLng}
           lat={centerLat}
           brandedHouses={brandedHouses}
+          blocks={blockNumbers}
           parentTerritory={territoryId}
           onBrandedEdit={(territory) => handleTerritorySelection(territory)}
           territoryId={territoryId}
           onBrandedSave={(territory) => handleTerritorySelection(territory)}
+          onBlockSave={(territory) => handleTerritorySelection(territory)}
           onCornerSelection={(corner, coordinates) => handleCoordinatesChange(corner, coordinates)}
         />
       </div>
@@ -251,44 +248,7 @@ const Territorios = () => {
       <div className="row">
         <div className="col-6"></div>
       </div>
-      {/* {(user?.canWrite || user?.isAdmin) && !editable && (
-        <>
-          <div className="row mb-5 me-5">
-            <div className="col-sm-12 territorioGeocode">
-              <Geocode
-                inputName="A"
-                editable={editable}
-                onCoordinatesChange={(newCoordinates) => {
-                  handleCoordinatesChange("A", newCoordinates);
-                }}
-              />
-              <Geocode
-                inputName="B"
-                editable={editable}
-                onCoordinatesChange={(newCoordinates) => {
-                  handleCoordinatesChange("B", newCoordinates);
-                }}
-              />
-            </div>
-            <div className="col-sm-12 territorioGeocode">
-              <Geocode
-                inputName="C"
-                editable={editable}
-                onCoordinatesChange={(newCoordinates) => {
-                  handleCoordinatesChange("C", newCoordinates);
-                }}
-              />
-              <Geocode
-                inputName="D"
-                editable={editable}
-                onCoordinatesChange={(newCoordinates) => {
-                  handleCoordinatesChange("D", newCoordinates);
-                }}
-              />
-            </div>
-          </div>
-        </>
-      )} */}
+      
     </div>
   );
 };

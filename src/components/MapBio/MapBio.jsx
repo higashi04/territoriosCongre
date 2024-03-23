@@ -6,13 +6,14 @@ import "./MapBio.css";
 
 import MapLines from "../MapLines/MapLines";
 import MarkerBrandedHouses from "../MarkerBrandedHouses/MarkerBrandedHouses";
+import MarkerBlockNumber from "../MarkerBlockNumber/MarkerBlockNumber";
 import ModalMapOptions from "../ModalMapOptions/ModalMapOptions";
 
 import mapboxgl from 'mapbox-gl';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
-const MapBio = ({ markers, lng, lat, brandedHouses, parentTerritory, onBrandedEdit, territoryId, onBrandedSave, onCornerSelection }) => {
+const MapBio = ({ markers, lng, lat, brandedHouses, blocks, parentTerritory, onBrandedEdit, territoryId, onBrandedSave, onCornerSelection, onBlockSave }) => {
   const [zoom, setZoom] = useState(18);
   const [coordinates, setCoordinates] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -27,8 +28,6 @@ const MapBio = ({ markers, lng, lat, brandedHouses, parentTerritory, onBrandedEd
   }, [lng, lat])
 
   useEffect( () => {
-    console.log(lngValue)
-    console.log(latValue)
     if(map) {
       map.flyTo({center: [lngValue, latValue]})
     }
@@ -84,6 +83,17 @@ const MapBio = ({ markers, lng, lat, brandedHouses, parentTerritory, onBrandedEd
                 onMarkerClick={event => handleMarkerClick(event)}
               />
             ))}
+
+            {blocks.length > 0 &&
+              blocks.map((block) => (
+                <MarkerBlockNumber 
+                  key={block._id}
+                  block={block}
+                  onBlockSave={onBlockSave}
+                  parentTerritoryId={parentTerritory}
+                  onMarkerClick={event => handleMarkerClick(event)}
+                />
+              ))}
         </ReactMapGl>
       </div>
       <div className="row mt-3 me-5">
@@ -110,6 +120,7 @@ const MapBio = ({ markers, lng, lat, brandedHouses, parentTerritory, onBrandedEd
         territoryId= {territoryId}
         onModalClose={e => setShowModal(e)} 
         onBrandedSave={onBrandedSave}
+        onBlockSave={onBlockSave}
         onCornerSelection={(corner, coordinates) => onCornerSelection(corner, coordinates)}
         />
       )}
