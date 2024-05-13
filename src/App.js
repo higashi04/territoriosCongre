@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
 import './App.css';
 
 //components
@@ -13,11 +14,12 @@ import Congregacion from "./pages/Congregacion/Congregacion";
 import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
+  const { user } = useSelector((state) => state.auth);
   return (
     <>
       <BrowserRouter>
       
-    <Navibar/>
+    {user && <Navibar/>}
       <div className="AppBody">
         <Routes>
           <Route path="/" element={<Login/>}>
