@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { showAlert } from "../../redux/err/alertSlice";
 
 import ModalSearchCongregaciones from "../../components/ModalSearchCongregaciones/ModalSearchCongregaciones";
 
@@ -10,6 +12,7 @@ const Congregacion = () => {
   const [congregationId, setCongregationId] = useState("");
   const [editionActive, setEditionActive] = useState(true);
 
+  const dispatch = useDispatch();
   const {user} = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
@@ -57,11 +60,11 @@ const Congregacion = () => {
         body: JSON.stringify(data),
       });
       if (response.ok) {
-        alert("ok");
+        dispatch(showAlert({message: "Congregación registrada correctamente", type: "success"}))
         //remember to add validation and error handling ui elements lol
       }
     } catch (error) {
-      console.error(error);
+      dispatch(showAlert({message: error.message, type: "error"}))
     } finally{
         handleNewCongregation()
     }

@@ -58,8 +58,9 @@ const Navibar = () => {
               )}
                {user?.isAdmin && ( 
                 <>
-                <Link className="btn btn-outline-dark" to="/Congregacion">Alta de Congregaciones</Link>
-                <Link className="btn btn-outline-dark" to="/Register"> Administrar Usuarios</Link>
+                <Link className="btn btn-outline-dark mx-2" to="/Congregacion">Alta de Congregaciones</Link>
+                <Link className="btn btn-outline-dark mx-2" to="/Register"> Administrar Usuarios</Link>
+                <Link className="btn btn-outline-dark mx-2" to="/Horario"> Horarios de Predicación</Link>
                 </>
               )} 
             </Nav>

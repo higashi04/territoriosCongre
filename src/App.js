@@ -12,6 +12,7 @@ import LoggedIn from "./pages/LoggedInWelcome/LoggedIn";
 import Register from "./pages/Register/Register";
 import Territorios from "./pages/Territorios/Territorios";
 import Congregacion from "./pages/Congregacion/Congregacion";
+import Horario from "./pages/Horario/Horario";
 import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <Route path="/Register" element={<Register/>} />
           <Route path="/Territorios" element={<Territorios/>}/>
           <Route path="/Congregacion" element={<Congregacion/>}/>
+          <Route path="/Horario" element={<Horario/>} />
           <Route path="*" element={<NotFound/>} />
         </Routes>
       </div>
