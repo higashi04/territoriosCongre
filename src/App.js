@@ -5,6 +5,7 @@ import './App.css';
 
 //components
 import Navibar from "./components/navbar/Navbar";
+import Alert from "./components/Alert/Alert";
 //pages
 import Login from "./pages/Login/Login";
 import LoggedIn from "./pages/LoggedInWelcome/LoggedIn";
@@ -20,6 +21,7 @@ function App() {
       <BrowserRouter>
       
     {user && <Navibar/>}
+    <Alert/>
       <div className="AppBody">
         <Routes>
           <Route path="/" element={<Login/>}>

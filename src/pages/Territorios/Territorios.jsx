@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { useDispatch } from "react-redux";
+import { showAlert } from "../../redux/err/alertSlice";
 
 import MapBio from "../../components/MapBio/MapBio";
 // import Geocode from "../../components/Geocoding/Geocoding";
@@ -22,6 +24,7 @@ const Territorios = () => {
   const [lines, setLines] = useState([]);
   const [horario, setHorario] = useState("0");
 
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
@@ -116,7 +119,7 @@ const Territorios = () => {
       if (!response.ok) {
         throw response;
       }
-
+      dispatch(showAlert({message: "Territorio creado correctamente", type: "success"}))
       const json = await response.json();
 
       setTerritorioName(json.nombre);
@@ -125,10 +128,10 @@ const Territorios = () => {
     } catch (error) {
       try {
         const err = await error.json();
-        alert(err.messasge);
+        dispatch(showAlert({message: err.message, type: "error"}))
       } catch (errorTwo) {
         console.error(errorTwo);
-        alert(error);
+        dispatch(showAlert({message: error.message, type: "error"}))
       }
     }
   };
