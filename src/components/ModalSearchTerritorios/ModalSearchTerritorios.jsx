@@ -40,9 +40,9 @@ function ModalSearchTerritorios({onTerritorySelection}) {
 
   return (
     <>
-      <span>
+      <button className="btn">
         <TbMapSearch id="btnSearchTerritorios" onClick={handleShow} />
-      </span>
+      </button>
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>

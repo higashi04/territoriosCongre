@@ -17,3 +17,10 @@
     width: auto;
     color: red;
 }
+
+.labelBox{
+    border-radius: 15px;
+    background-color: #fff;
+    padding: .5rem;
+    margin-right: 1%;
+}

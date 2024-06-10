@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Source, Layer} from 'react-map-gl';
 
-const MapLines = ({markerOne, markerTwo}) => {
+const MapLines = ({latOne, latTwo, lngOne, lngTwo, horario}) => {
+  const [lineColor, setLineColor] = useState("rgba(3, 170, 238, 0.5)");
+
+  useEffect(() => {
+    switch (horario) {
+      case "0":
+        setLineColor("rgba(33, 170, 208, 0.5)")
+        break;
+    
+      default:
+        setLineColor("rgba(3, 170, 238, 0.5)");
+        break;
+    }
+  }, [horario])
 
     const dataOne = {
         type: "Feature",
@@ -9,8 +22,8 @@ const MapLines = ({markerOne, markerTwo}) => {
         geometry: {
           type: "LineString",
           coordinates: [
-            [markerOne === null ? 0 : markerOne.lng, markerOne === null ? 0 : markerOne.lat],
-            [markerTwo === null ? 0 : markerTwo.lng, markerTwo === null ? 0 : markerTwo.lat]
+            [lngOne === null ? 0 : lngOne, latOne === null ? 0 : latOne],
+            [lngTwo === null ? 0 : lngTwo, latTwo === null ? 0 : latTwo]
           ]
         }
       };
@@ -27,8 +40,9 @@ const MapLines = ({markerOne, markerTwo}) => {
         "line-cap": "round"
       }}
       paint={{
-        "line-color": "rgba(3, 170, 238, 0.5)",
-        "line-width": 5
+        "line-color": lineColor,
+        "line-width": 5,
+        "line-dasharray": [2, 2] 
       }}
     />
   </Source>

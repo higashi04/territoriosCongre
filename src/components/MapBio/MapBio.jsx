@@ -13,7 +13,7 @@ import mapboxgl from 'mapbox-gl';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
-const MapBio = ({ markers, lng, lat, brandedHouses, blocks, parentTerritory, onBrandedEdit, territoryId, onBrandedSave, onCornerSelection, onBlockSave }) => {
+const MapBio = ({ lines, horario, lng, lat, brandedHouses, blocks, parentTerritory, onBrandedEdit, territoryId, onBrandedSave, onCornerSelection, onBlockSave}) => {
   const [zoom, setZoom] = useState(18);
   const [coordinates, setCoordinates] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -50,9 +50,6 @@ const MapBio = ({ markers, lng, lat, brandedHouses, blocks, parentTerritory, onB
     <>
       <div id="mapHolder">
         <ReactMapGl
-          // center={[lng, lat]}
-          // latitude={lat}
-          // longitude={lng}
           ref={el => setMap(el)}
           zoom={zoom}
           mapboxAccessToken={process.env.REACT_APP_MAPBOX_KEY}
@@ -62,13 +59,13 @@ const MapBio = ({ markers, lng, lat, brandedHouses, blocks, parentTerritory, onB
           mapStyle={process.env.REACT_APP_MAP_STYLE}
           onClick={handleMapClick}
           interactive={true}
-          dragPan = {true}
-          dragRotate = {true}
+          dragPan={true}
+          dragRotate={true}
+          touchZoom={true}
+          scrollZoom={{ speed: 1 }}
+          touchRotate={true}
         >
-          <MapLines markerOne={markers[0]} markerTwo={markers[1]} />
-          <MapLines markerOne={markers[1]} markerTwo={markers[3]} />
-          <MapLines markerOne={markers[0]} markerTwo={markers[2]} />
-          <MapLines markerOne={markers[2]} markerTwo={markers[3]} />
+          {lines.map(line => <MapLines key={line.id} {...line} />)}
 
           {brandedHouses.length > 0 &&
             brandedHouses.map((branded) => (
@@ -98,12 +95,12 @@ const MapBio = ({ markers, lng, lat, brandedHouses, blocks, parentTerritory, onB
       </div>
       <div className="row mt-3 me-5">
         <div id="mapBio_zoom" className="input-group">
-          <span className="form-label">Zoom {zoom}</span>
+          <label className="labelBox">Zoom {zoom}</label>
           <input
             type="range"
             className="form-range"
             min={1}
-            max={25}
+            max={22}
             step={1}
             onChange={(e) => {
               setZoom(parseInt(e.target.value));
@@ -113,7 +110,7 @@ const MapBio = ({ markers, lng, lat, brandedHouses, blocks, parentTerritory, onB
         </div>
       </div>
 
-      {showModal && (
+      {showModal && territoryId.length !== 0 && (
         <ModalMapOptions 
         coordinates={coordinates}
         showModal={showModal}

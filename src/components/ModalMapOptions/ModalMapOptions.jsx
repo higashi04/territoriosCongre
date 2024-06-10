@@ -33,23 +33,40 @@ const ModalMapOptions = ({
     }
   });
 
+  const onLineSave = async() => {
+    try {
+      
+    } catch (error) {
+      
+    }
+  }
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
         <Modal.Title>
-          Coordenadas {coordinates?.lat}, {coordinates?.lng}
+          Interactuar con el Mapa
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {territoryId.length > 0 ? (
+        {territoryId.length > 0 && (
+          <>
           <OptionsAddingMarkers 
           lat={coordinates?.lat} 
           lng ={coordinates?.lng} 
           parentTerritory={territoryId} 
           onBrandedSave={onBrandedSave} 
           onBlockSave={onBlockSave}/>
-        ) : (
-         <OptionsNewTerritory coordinates={coordinates} onCornerSelection={(corner, coordinates) => onCornerSelection(corner, coordinates)} />
+
+          <br />
+          <h6>Trazar una línea en el mapa</h6>
+          <div className="container">
+          
+          <OptionsNewTerritory coordinates={coordinates} setShow={e => setShow(e)} onCornerSelection={(corner, coordinates) => onCornerSelection(corner, coordinates)} />
+          <button className="btn btn-outline-primary">Guardar Línea</button>
+          </div>
+
+          </>
         )}
       </Modal.Body>
       <Modal.Footer>
