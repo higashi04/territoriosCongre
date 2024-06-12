@@ -5,19 +5,6 @@ import { RgbaColorPicker } from 'react-colorful'
 const ColorPicker = ({rgbaString, returnString}) => {
     const [color, setColor] = useState({r:75, g: 75, b: 150, a: 1 })
 
-    const setRgbaFromString = () => {
-        const regex = /rgba?\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/;
-        const result = regex.exec(rgbaString);
-
-        if (result) {
-            setColor({
-                r: parseInt(result[1], 10),
-                g: parseInt(result[2], 10),
-                b: parseInt(result[3], 10),
-                a: parseFloat(result[4])
-            });
-        }
-    }
 
     const handleColorPick = (rgba) => {
         setColor(rgba);
@@ -27,8 +14,18 @@ const ColorPicker = ({rgbaString, returnString}) => {
     }
 
     useEffect(() => {
-        setRgbaFromString()
-    }, [rgbaString, setRgbaFromString])
+      const regex = /rgba?\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/;
+      const result = regex.exec(rgbaString);
+
+      if (result) {
+          setColor({
+              r: parseInt(result[1], 10),
+              g: parseInt(result[2], 10),
+              b: parseInt(result[3], 10),
+              a: parseFloat(result[4])
+          });
+      }
+    }, [rgbaString])
 
   return (
     <div className='container'>
