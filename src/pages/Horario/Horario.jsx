@@ -53,6 +53,7 @@ const Horario = () => {
         })
       );
       const json = await response.json();
+      console.log(json)
     } catch (error) {
         const err = await error.json();
       dispatch(showAlert({ message: err.message, type: "error" }));

@@ -28,7 +28,7 @@ const ColorPicker = ({rgbaString, returnString}) => {
 
     useEffect(() => {
         setRgbaFromString()
-    }, [rgbaString])
+    }, [rgbaString, setRgbaFromString])
 
   return (
     <div className='container'>
