@@ -14,7 +14,7 @@ import mapboxgl from 'mapbox-gl';
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 const MapBio = ({ lines, horario, lng, lat, brandedHouses, blocks, parentTerritory, onBrandedEdit, territoryId, onBrandedSave, onCornerSelection, onBlockSave}) => {
-  const [zoom, setZoom] = useState(18);
+  const [zoom, setZoom] = useState(16);
   const [coordinates, setCoordinates] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [map, setMap] = useState(null);
@@ -65,7 +65,7 @@ const MapBio = ({ lines, horario, lng, lat, brandedHouses, blocks, parentTerrito
           scrollZoom={{ speed: 1 }}
           touchRotate={true}
         >
-          {lines.map(line => <MapLines key={line.id} {...line} />)}
+          {lines.map(line => <MapLines key={line._id} {...line} horario={horario} />)}
 
           {brandedHouses.length > 0 &&
             brandedHouses.map((branded) => (

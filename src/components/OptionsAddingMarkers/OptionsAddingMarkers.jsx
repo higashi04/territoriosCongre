@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { showAlert } from "../../redux/err/alertSlice";
 
 const OptionsAddingMarkers = ({lat, lng, parentTerritory, onBrandedSave, onBlockSave}) => {
   const [option, setOption] = useState(0);
   const [address, setAddress] = useState("");
   const [comments, setComments] = useState("");
   const [blockNumber, setBlockNumber] = useState("");
+
+  
+  const dispatch = useDispatch();
 
 
   const handleBrandedCreation = async () => {
@@ -24,7 +29,6 @@ const OptionsAddingMarkers = ({lat, lng, parentTerritory, onBrandedSave, onBlock
           body: JSON.stringify(data),
         }
       );
-
       if (request.ok) {
         const response = await request.json();
         onBrandedSave(response);
@@ -32,8 +36,14 @@ const OptionsAddingMarkers = ({lat, lng, parentTerritory, onBrandedSave, onBlock
         throw request;
       }
     } catch (error) {
-      const err = await error.json();
-      console.error(err);
+      try {
+        const err = await error.json();
+        console.error(err)
+        dispatch(showAlert({message: err.message, type: "error"}));
+      } catch (errorTwo) {
+        dispatch(showAlert({message: error.message, type: "error"}));
+        console.error(errorTwo);
+      }
     }
   };
 

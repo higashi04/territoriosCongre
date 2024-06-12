@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { useDispatch } from 'react-redux';
-import  {showAlert} from '../../redux/err/alertSlice';
 
 import OptionsAddingMarkers from "../OptionsAddingMarkers/OptionsAddingMarkers";
 import OptionsNewTerritory from "../OptionsNewTerritory/OptionsNewTerritory";
@@ -17,7 +15,6 @@ const ModalMapOptions = ({
   onBlockSave
 }) => {
   const [show, setShow] = useState(showModal);
-  const dispatch = useDispatch();
 
   const handleClose = () => {
     setShow(false);
@@ -35,14 +32,6 @@ const ModalMapOptions = ({
       handleClose();
     }
   });
-
-  const onLineSave = async() => {
-    try {
-      throw new Error("test")
-    } catch (error) {
-      dispatch(showAlert({message: error.message, type: "error"}))
-    }
-  }
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -65,8 +54,7 @@ const ModalMapOptions = ({
           <h6>Trazar una línea en el mapa</h6>
           <div className="container">
           
-          <OptionsNewTerritory coordinates={coordinates} setShow={e => setShow(e)} onCornerSelection={(corner, coordinates) => onCornerSelection(corner, coordinates)} />
-          <button className="btn btn-outline-primary" onClick={onLineSave}>Guardar Línea</button>
+          <OptionsNewTerritory coordinates={coordinates} setShow={handleClose} onCornerSelection={(corner, coordinates) => onCornerSelection(corner, coordinates)} />
           </div>
 
           </>

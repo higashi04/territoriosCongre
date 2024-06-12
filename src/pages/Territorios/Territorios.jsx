@@ -22,7 +22,10 @@ const Territorios = () => {
   const [brandedHouses, setBrandedHouses] = useState([]);
   const [blockNumbers, setBlockNumbers] = useState([]);
   const [lines, setLines] = useState([]);
-  const [horario, setHorario] = useState("0");
+  const [horario, setHorario] = useState({
+    horario: "0",
+    rgba: "rgba(3, 170, 238, 0.5)"
+  });
 
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -34,35 +37,29 @@ const Territorios = () => {
     }
   }, [user, navigate]);
 
-  // useEffect(() => {
-  //   try {
-  //     if (
-  //       coordinatesA.lng !== 0 &&
-  //       coordinatesB.lng !== 0 &&
-  //       coordinatesC.lng !== 0 &&
-  //       coordinatesD.lng !== 0
-  //     ) {
-  //       const lngSum =
-  //         coordinatesA.lng +
-  //         coordinatesB.lng +
-  //         coordinatesC.lng +
-  //         coordinatesD.lng;
-  //       const latSum =
-  //         coordinatesA.lat +
-  //         coordinatesB.lat +
-  //         coordinatesC.lat +
-  //         coordinatesD.lat;
+  useEffect(() => {
+    try {
+      if (lines.length > 0) {
+        const {totalLatitudes, totalLongitudes} = lines.reduce(
+          (accumulated, line) => {
+            accumulated.totalLatitudes += line.latOne + line.latTwo;
+            accumulated.totalLongitudes += line.lngOne + line.lngTwo;
+            return accumulated;
+          },
+          {totalLatitudes: 0, totalLongitudes: 0}
+        )
+        
+        const numberOfPoints = lines.length * 2;
+        const centeredLng = totalLongitudes / numberOfPoints;
+        const centeredLat = totalLatitudes / numberOfPoints;
 
-  //       const centeredLng = lngSum / 4;
-  //       const centeredLat = latSum / 4;
-
-  //       setCenterLat(centeredLat);
-  //       setCenterLng(centeredLng);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }, [coordinatesA, coordinatesB, coordinatesC, coordinatesD]);
+        setCenterLat(centeredLat);
+        setCenterLng(centeredLng);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [lines]);
 
   useEffect(() => {
     if (coordinatesA.lng !== 0 && coordinatesB.lng !== 0) {
@@ -73,8 +70,7 @@ const Territorios = () => {
           lngOne: coordinatesA.lng,
           latTwo: coordinatesB.lat,
           lngTwo: coordinatesB.lng,
-          horario,
-          id: uuidv4(),
+          _id: uuidv4(),
         },
       ]);
 
@@ -148,29 +144,59 @@ const Territorios = () => {
   };
 
   const handleTerritorySelection = (chosenTerritory) => {
-    console.log(chosenTerritory);
     try {
-      // setCoordinatesA({
-      //   lat: chosenTerritory.esquinaLatitudA,
-      //   lng: chosenTerritory.esquinaLongitudA,
-      //   title: "A",
-      // });
-      // setCoordinatesB({
-      //   lat: chosenTerritory.esquinaLatitudB,
-      //   lng: chosenTerritory.esquinaLongitudB,
-      //   title: "B",
-      // });
 
       setTerritorioName(chosenTerritory.nombre);
       setTerritoryId(chosenTerritory._id);
       setBrandedHouses(chosenTerritory.marcados);
       setBlockNumbers(chosenTerritory.blocks);
       setLines(chosenTerritory.lineas);
-      setHorario(chosenTerritory.horario);
+      // setHorario(chosenTerritory.horario);
+      setEditable(false);
     } catch (error) {
       console.error(error);
     }
   };
+
+  const handleSaveLines = async() => {
+    try {
+      if(lines.length === 0) {
+        dispatch(showAlert({message: "Necesita dibujar al menos una linea en el territorio", type: "warning"}));
+        return;
+      }
+
+      const data ={
+        lines,
+        territoryId,
+        congregacion: user.congregacion
+      }
+
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}lines/create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if(!response.ok) {
+        throw response;
+      } else {
+        dispatch(showAlert({message: "Líneas guardadas correctamente", type: "success"}));
+      }
+
+    } catch (error) {
+      try {
+        const err = await error.json();
+        dispatch(showAlert({message: err.message, type: "error"}));
+      } catch (errorTwo) {
+        console.error(errorTwo);
+        dispatch(showAlert({message: error.message, type: "error"}));
+      }
+    }
+  }
+
 
   return (
     <div id="territorioBody">
@@ -219,12 +245,20 @@ const Territorios = () => {
                 Eliminar
               </button>
               {!editable && (
+                <>
                 <button
                   className="btn btn-primary mx-2 mb-2"
                   onClick={() => handleSaveChanges()}
                 >
                   Guardar Cambios
                 </button>
+                <button 
+                  className="btn btn-primary mx-2 mb-2"
+                  onClick={() => handleSaveLines()}
+                >
+                  Guardar Líneas
+                </button>
+                </>
               )}
             </>
           ) : (

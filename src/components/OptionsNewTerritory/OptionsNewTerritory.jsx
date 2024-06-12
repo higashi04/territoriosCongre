@@ -4,6 +4,7 @@ const OptionsNewTerritory = ({ coordinates, onCornerSelection, setShow }) => {
   const handleBtnClick = (letter) => {
     //console.log(coordinates)
     onCornerSelection(letter, coordinates);
+    setShow();
   };
 
   return (

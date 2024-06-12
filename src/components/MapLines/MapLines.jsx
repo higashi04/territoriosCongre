@@ -5,14 +5,10 @@ const MapLines = ({latOne, latTwo, lngOne, lngTwo, horario}) => {
   const [lineColor, setLineColor] = useState("rgba(3, 170, 238, 0.5)");
 
   useEffect(() => {
-    switch (horario) {
-      case "0":
-        setLineColor("rgba(33, 170, 208, 0.5)")
-        break;
-    
-      default:
-        setLineColor("rgba(3, 170, 238, 0.5)");
-        break;
+    if(horario) {
+      setLineColor(horario.rgba)
+    } else {
+      setLineColor("rgba(3, 170, 238, 0.5)");
     }
   }, [horario])
 
