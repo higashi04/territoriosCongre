@@ -3,7 +3,8 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import { BsPinMapFill } from "react-icons/bs";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { FaSignOutAlt, FaUser } from "react-icons/fa";
+import { FaSignOutAlt } from "react-icons/fa";
+// import { FaUser } from "react-icons/fa";
 import { logout, reset } from "../../redux/auth/authSlice";
 
 const Navibar = () => {
@@ -66,7 +67,8 @@ const Navibar = () => {
             </Nav>
             {user && (
               <>
-              <Link to='/perfil' className="btn btn-dark me-2" reloadDocument> <FaUser/> {user.username}</Link>
+              <a href="https://lighthearted-pie-05c87f.netlify.app/" target="_blank" rel="noopener noreferrer" className="btn btn-dark me-2" >Mapa Completo</a>
+              {/* <Link to='/perfil' className="btn btn-dark me-2" reloadDocument> <FaUser/> {user.username}</Link> */}
                 <button className="btn btn-dark" onClick={onLogout}>
                   <FaSignOutAlt /> Cerrar Sesión
                 </button>

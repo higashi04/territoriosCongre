@@ -6,11 +6,13 @@ import { showAlert } from "../../redux/err/alertSlice";
 import "./Horario.css";
 
 import ColorPicker from "../../components/ColorPicker/ColorPicker";
+import ModalGetHorarios from "../../components/ModalGetHorarios/ModalGetHorarios";
 
 const Horario = () => {
   const [disableControls, setDisableControls] = useState(true);
   const [horario, setHorario] = useState("");
   const [colorPick, setColorPick] = useState("");
+  const [horarioId, setHorarioId] = useState("");
 
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -25,6 +27,19 @@ const Horario = () => {
   const getRgbaObject = (value) => {
     setColorPick(value);
   };
+
+  const handleScheduleSelection = (row) => {
+    setHorario(row.horario);
+    setColorPick(row.rgba);
+    setHorarioId(row._id);
+  }
+
+  const handleCleanForm = () => {
+    setHorario("");
+    setColorPick("");
+    setHorarioId("");
+    setDisableControls(true);
+  }
 
   const crearHorario = async () => {
     try {
@@ -53,27 +68,80 @@ const Horario = () => {
         })
       );
       const json = await response.json();
-      console.log(json)
+      
+      setHorario(json.horario.horario);
+      setColorPick(json.horario.rgba);
+      setHorarioId(json.horario._id);
+
     } catch (error) {
-        const err = await error.json();
+      const err = await error.json();
       dispatch(showAlert({ message: err.message, type: "error" }));
     }
   };
+
+  const updateHorario = async() => {
+    try {
+      const data = {
+        _id: horarioId,
+        horario,
+        rgba: colorPick,
+      }
+      
+
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}horarios/update`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        throw response;
+      }
+      dispatch(
+        showAlert({
+          message: "Horario actualizado correctamente",
+          type: "success",
+        })
+      );
+
+    } catch (error) {
+      const err = await error.json();
+      dispatch(showAlert({ message: err.message, type: "error" }));
+    }
+  }
+
+  const handleHttpRequest = async() => {
+    if(horarioId.length === 0) {
+      await crearHorario();
+    } else {
+      await updateHorario();
+    }
+  }
   return (
     <div className="container-fluid mt-5">
       <div className="HorarioTitle  mx-5 row">Horarios de Predicación</div>
       <div className="row m-4 pb-2">
         <div className="input-group">
-          <button className="btn btn-primary" disabled={!disableControls}>
-            Buscar
+          <ModalGetHorarios 
+            onScheduleSelection={(schedule) => handleScheduleSelection(schedule)}
+            disable={!disableControls} />
+          <button 
+            className="btn btn-success" 
+            onClick={handleHttpRequest} 
+            disabled={disableControls}
+          >
+            Grabar
           </button>
-          <button className="btn btn-success" onClick={crearHorario}>Grabar</button>
           <button
             className="btn btn-dark"
             onClick={() => setDisableControls((value) => !value)}
           >
-            Habilitar Botones
+            {disableControls ? "Habilitar Botones" : "Deshabilitar Botones"}
           </button>
+          <button className="btn btn-secondary" onClick={handleCleanForm} disabled={disableControls}>Limpiar Campos</button>
         </div>
       </div>
       <div className="row m-4">
@@ -83,6 +151,7 @@ const Horario = () => {
             <input
               type="text"
               className="form-control"
+              value={horario}
               onChange={(event) => setHorario(event.target.value)}
               disabled={disableControls}
             />

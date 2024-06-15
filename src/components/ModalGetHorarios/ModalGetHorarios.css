@@ -1,0 +1,21 @@
+.horarioRow{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    text-align: center;
+    padding: 5% 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    border-radius: 15px;
+}
+
+.horarioRow:nth-of-type(even) {
+    background-color: rgb(136, 135, 135);
+}
+
+.horarioRow:hover{
+    background-color: rgb(100, 99, 99);
+    color: #fff;
+    cursor: pointer;
+}

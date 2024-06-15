@@ -6,10 +6,14 @@ import { useDispatch } from "react-redux";
 import { showAlert } from "../../redux/err/alertSlice";
 
 import MapBio from "../../components/MapBio/MapBio";
-// import Geocode from "../../components/Geocoding/Geocoding";
 import ModalSearchTerritorios from "../../components/ModalSearchTerritorios/ModalSearchTerritorios";
+import ModalGetHorarios from "../../components/ModalGetHorarios/ModalGetHorarios";
 
 import "./Territorios.css";
+const defaultHorario = {
+  horario: "0",
+  rgba: "rgba(3, 170, 238, 0.5)"
+}
 
 const Territorios = () => {
   const [territorioName, setTerritorioName] = useState("nombre de territorio");
@@ -22,10 +26,7 @@ const Territorios = () => {
   const [brandedHouses, setBrandedHouses] = useState([]);
   const [blockNumbers, setBlockNumbers] = useState([]);
   const [lines, setLines] = useState([]);
-  const [horario, setHorario] = useState({
-    horario: "0",
-    rgba: "rgba(3, 170, 238, 0.5)"
-  });
+  const [horario, setHorario] = useState(defaultHorario);
 
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -140,7 +141,7 @@ const Territorios = () => {
     setBrandedHouses([]);
     setBlockNumbers([]);
     setLines([]);
-    setHorario("0");
+    setHorario(defaultHorario);
   };
 
   const handleTerritorySelection = (chosenTerritory) => {
@@ -151,12 +152,45 @@ const Territorios = () => {
       setBrandedHouses(chosenTerritory.marcados);
       setBlockNumbers(chosenTerritory.blocks);
       setLines(chosenTerritory.lineas);
-      // setHorario(chosenTerritory.horario);
+      setHorario(chosenTerritory.horario);
       setEditable(false);
     } catch (error) {
       console.error(error);
     }
   };
+
+  const saveHorario = async(horario, schedule) => {
+    try {
+      const data = {
+        horario,
+        territory: territoryId
+      }
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}territorios/setSchedule`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data),
+      });
+
+      if(!response.ok) {
+        throw response;
+      }
+
+      dispatch(showAlert({message: `Horario ${schedule} asignado al territorio ${territorioName} correctamente`, type: "success"}));
+    } catch (error) {
+      try {
+        const err = await error.json();
+        dispatch(showAlert({message: err.message, type: "error"}));
+      } catch (errorTwo) {
+        console.error(errorTwo);
+        dispatch(showAlert({message: error.message, type: "error"}));
+      }
+    }
+  }
+
+  const handleScheduleSelection = async(horarioClicked) => {
+    setHorario(horarioClicked);
+    await saveHorario(horarioClicked._id, horarioClicked.horario);
+  }
 
   const handleSaveLines = async() => {
     try {
@@ -201,7 +235,7 @@ const Territorios = () => {
   return (
     <div id="territorioBody">
       <div className="row my-5">
-        <div className="col-8">
+        <div className="col-4">
           <div className="row my-3">
             <div className="input-group">
               <label className="input-group-text">Territorio:</label>
@@ -220,7 +254,7 @@ const Territorios = () => {
             </div>
           </div>
         </div>
-        <div className="col-4">
+        <div className="col-8">
           {user?.isAdmin || user?.canWrite ? (
             <>
               <button
@@ -228,12 +262,13 @@ const Territorios = () => {
                 onClick={() => {
                   setEditable(false);
                 }}
+                disabled={!editable}
               >
                 Crear
               </button>
-              <button className="btn btn-dark mx-2 mb-2" disabled>
+              {/* <button className="btn btn-dark mx-2 mb-2" disabled={editable}>
                 Editar
-              </button>
+              </button> */}
               <button
                 className="btn btn-secondary mx-2 mb-2"
                 disabled={editable}
@@ -241,9 +276,9 @@ const Territorios = () => {
               >
                 Cancelar
               </button>
-              <button className="btn btn-danger mx-2 mb-2" disabled>
+              {/* <button className="btn btn-danger mx-2 mb-2" disabled>
                 Eliminar
-              </button>
+              </button> */}
               {!editable && (
                 <>
                 <button
@@ -257,6 +292,9 @@ const Territorios = () => {
                   onClick={() => handleSaveLines()}
                 >
                   Guardar Líneas
+                </button>
+                <button  className="btn mb-2"> 
+                  <ModalGetHorarios onScheduleSelection={(row) => handleScheduleSelection(row)} />
                 </button>
                 </>
               )}
